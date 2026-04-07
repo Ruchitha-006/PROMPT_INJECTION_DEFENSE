@@ -5,8 +5,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from env.environment import PromptInjectionEnv
-from env.models import AgentAction
+from core.environment import PromptInjectionEnv
+from core.models import AgentAction
 
 app = FastAPI(
     title="Prompt Injection Defense — OpenEnv",

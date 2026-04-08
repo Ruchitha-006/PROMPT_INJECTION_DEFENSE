@@ -1,21 +1,35 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from inference import process_input
 
-# Create FastAPI app
+# ✅ CORRECT IMPORT (after folder rename)
+from prompt_injection_defense.inference import run_task
+
 app = FastAPI()
 
-# Request model
-class InputData(BaseModel):
-    text: str
 
-# Root route (test if server works)
+# ✅ Request Schema
+class InputData(BaseModel):
+    task: str
+
+
+# ✅ Health Check Route
 @app.get("/")
 def home():
-    return {"message": "🚀 Prompt Injection Defense Server is running!"}
+    return {"message": "🚀 Server is running!"}
 
-# Main API endpoint
-@app.post("/analyze")
-def analyze(data: InputData):
-    result = process_input(data.text)
-    return result
+
+# ✅ Main API Route
+@app.post("/run")
+def run(data: InputData):
+    try:
+        result = run_task(data.task)
+        return {
+            "status": "success",
+            "task": data.task,
+            "result": result
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
